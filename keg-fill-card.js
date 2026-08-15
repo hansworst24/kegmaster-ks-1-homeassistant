@@ -25,6 +25,7 @@ class KegFillCard extends HTMLElement {
     return {
       title: 'Keg',
       weight_entity: '',
+      temperature_entity: '',
       battery_entity: '',
       uptime_entity: '',
       empty_weight: 0,
@@ -60,6 +61,7 @@ class KegFillCard extends HTMLElement {
     }
 
     const battery = this._fmt(c.battery_entity, (s) => Math.round(parseFloat(s)) + '%');
+    const temperature = this._fmt(c.temperature_entity, (s) => parseFloat(s).toFixed(1) + '°C');
     const uptime = this._fmt(c.uptime_entity, (s) => {
       const totalSeconds = Math.floor(parseFloat(s));
       const days = Math.floor(totalSeconds / 86400);
@@ -79,6 +81,7 @@ class KegFillCard extends HTMLElement {
             <div class="row">
               <div class="bar-slot"><div class="bar-outer"><div class="bar-fill"></div><div class="bar-label"></div></div></div>
               <div class="stats">
+                <div class="temp"></div>
                 <div><span class="k">Weight</span><span class="weight"></span></div>
                 <div><span class="k">Battery</span><span class="battery"></span></div>
                 <div><span class="k">Uptime</span><span class="uptime"></span></div>
@@ -89,6 +92,7 @@ class KegFillCard extends HTMLElement {
         <style>
           ha-card { padding: 12px 16px; }
           .title { font-weight: 500; font-size: 15px; margin-bottom: 10px; color: var(--primary-text-color); }
+          .temp { font-weight: 500; font-size: 15px; margin-bottom: 2px; color: var(--primary-text-color); }
           .row { display: flex; gap: 14px; }
           .bar-slot {
             width: 56px; height: 160px;
@@ -118,6 +122,7 @@ class KegFillCard extends HTMLElement {
       `;
       this._elements = {
         title: this.querySelector('.title'),
+        temp: this.querySelector('.temp'),
         barOuter: this.querySelector('.bar-outer'),
         fill: this.querySelector('.bar-fill'),
         label: this.querySelector('.bar-label'),
@@ -128,6 +133,7 @@ class KegFillCard extends HTMLElement {
     }
 
     this._elements.title.textContent = c.title || 'Keg';
+    this._elements.temp.textContent = temperature;
     this._elements.barOuter.style.height = boxHeight + 'px';
     this._elements.fill.style.height = pct + '%';
     this._elements.label.textContent = Math.round(pct) + '%';
@@ -166,6 +172,7 @@ class KegFillCardEditor extends HTMLElement {
     this._form.schema = [
       { name: 'title', selector: { text: {} } },
       { name: 'weight_entity', selector: { entity: {} } },
+      { name: 'temperature_entity', selector: { entity: {} } },
       { name: 'battery_entity', selector: { entity: {} } },
       { name: 'uptime_entity', selector: { entity: {} } },
       { name: 'empty_weight', selector: { number: { mode: 'box', unit_of_measurement: 'g' } } },
@@ -186,6 +193,7 @@ class KegFillCardEditor extends HTMLElement {
       const labels = {
         title: 'Title',
         weight_entity: 'Weight sensor',
+        temperature_entity: 'Temperature sensor',
         battery_entity: 'Battery sensor',
         uptime_entity: 'Uptime sensor',
         empty_weight: 'Empty keg weight (g)',
