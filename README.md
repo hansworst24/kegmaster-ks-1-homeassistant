@@ -1,5 +1,7 @@
 # Kegmaster KS-1 → Home Assistant integration
 
+![plot](/2kegs.png)
+
 Integrates the Kegmaster KS-1 Bluetooth keg scale into Home Assistant, without any cloud
 dependency or the official app. It works by passively listening to the KS-1's BLE
 advertisement broadcasts (the scale never needs pairing — it just shouts its data into
